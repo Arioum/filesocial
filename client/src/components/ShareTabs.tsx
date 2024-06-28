@@ -1,6 +1,7 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Dialogue from './Dialogue';
 import CopyLinkField from './ui/copylink-field';
+import UploadButton from './UploadButton';
 
 const ShareTabs = () => {
   return (
@@ -24,7 +25,7 @@ const ShareTabs = () => {
             Send up to 3 files at once with each file limited to a size of 10MB
             since you are on a <span className='text-[#FF0000]'>free plan</span>
           </p>
-          <input type='file' name='uploadFiles' />
+          <UploadButton />
           <img src='no-file.svg' alt='no-file-icon' />
           <span className='font-[600]'>No files added yet</span>
         </div>

@@ -9,8 +9,6 @@ import { Link, useLocation } from 'react-router-dom';
 const Navigation = () => {
   const { pathname } = useLocation();
 
-  console.log(pathname);
-
   return (
     <NavigationMenu className='w-[100%]'>
       <NavigationMenuList>
