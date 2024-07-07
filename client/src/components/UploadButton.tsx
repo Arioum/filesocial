@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import axios, { AxiosProgressEvent } from 'axios';
+import UploadFileInput from './ui/file-uploader';
 
 const uploadFileInChunks = async (file: File) => {
   const chunkSize = 5 * 1024 * 1024; // 5MB per chunk
@@ -55,12 +56,7 @@ const UploadButton = () => {
   return (
     <div className='flex flex-col items-center p-[1em]'>
       <input type='file' onChange={handleFileChange} />
-      <button
-        onClick={handleUpload}
-        className='bg-[#e7e7e7] rounded-[6px] p-[.8em_1.6em] text-[.85rem] font-[500] text-[#666666] w-fit'
-      >
-        Choose Files to Upload
-      </button>
+      <UploadFileInput />
     </div>
   );
 };

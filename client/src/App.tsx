@@ -1,28 +1,33 @@
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Navigation from './components/Navigation';
+import { ThemeProvider } from './lib/theme-provider';
 import Share from './page/Share';
 import AllFiles from './page/AllFiles';
 import History from './page/History';
 import YourPlans from './page/YourPlans';
 import Settings from './page/Settings';
+import Auth from './page/Auth';
+import SideBar from './layouts/SideBar';
+import Landing from './page/Landing';
 
 const App = () => {
   return (
-    <Router>
-      <div className='flex'>
-        <header className='h-[100vh] w-[200px] p-[1rem] flex flex-col gap-[2rem] justify-start items-center border-r-[2px] border-[#ececec]'>
-          <img src='logo.svg' alt='logo' width={150} />
-          <Navigation />
-        </header>
-        <Routes>
-          <Route path='/' element={<Share />} />
-          <Route path='/all-files' element={<AllFiles />} />
-          <Route path='/history' element={<History />} />
-          <Route path='/your-plans' element={<YourPlans />} />
-          <Route path='/settings' element={<Settings />} />
-        </Routes>
-      </div>
-    </Router>
+    <ThemeProvider defaultTheme='dark' storageKey='vite-ui-theme'>
+      <Router>
+        <div className='flex dark:bg-[#09090b] dark:text-[#fff]'>
+          <Routes>
+            <Route path='/' element={<Landing />}/>
+            <Route path='app' element={<SideBar />}>
+              <Route index path='share' element={<Share />} />
+              <Route path='all-files' element={<AllFiles />} />
+              <Route path='history' element={<History />} />
+              <Route path='your-plans' element={<YourPlans />} />
+              <Route path='settings' element={<Settings />} />
+            </Route>
+            <Route path='auth' element={<Auth />}/>
+          </Routes>
+        </div>
+      </Router>
+    </ThemeProvider>
   );
 };
 

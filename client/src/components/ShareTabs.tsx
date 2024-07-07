@@ -2,6 +2,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Dialogue from './Dialogue';
 import CopyLinkField from './ui/copylink-field';
 import UploadButton from './UploadButton';
+import IconSharingFile from '@/assets/sharing-file';
 
 const ShareTabs = () => {
   return (
@@ -26,8 +27,8 @@ const ShareTabs = () => {
             since you are on a <span className='text-[#FF0000]'>free plan</span>
           </p>
           <UploadButton />
-          <img src='no-file.svg' alt='no-file-icon' />
-          <span className='font-[600]'>No files added yet</span>
+          {/* <img src='no-file.svg' alt='no-file-icon' />
+          <span className='font-[600]'>No files added yet</span> */}
         </div>
         <Dialogue
           title='Start sharing?'
@@ -44,6 +45,7 @@ const ShareTabs = () => {
           <h4 className='text-[1.4rem] font-[700] font-secondary'>
             You have started sharing
           </h4>
+          <IconSharingFile />
           <p className='text-center font-[700] font-secondary'>
             Copy the link below and share it to the recipient
           </p>
