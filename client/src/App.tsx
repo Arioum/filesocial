@@ -8,6 +8,7 @@ import Settings from './page/Settings';
 import Auth from './page/Auth';
 import SideBar from './layouts/SideBar';
 import Landing from './page/Landing';
+import AppHome from './page/AppHome';
 
 const App = () => {
   return (
@@ -15,15 +16,16 @@ const App = () => {
       <Router>
         <div className='flex dark:bg-[#09090b] dark:text-[#fff]'>
           <Routes>
-            <Route path='/' element={<Landing />}/>
+            <Route path='/' element={<Landing />} />
             <Route path='app' element={<SideBar />}>
-              <Route index path='share' element={<Share />} />
+              <Route index element={<AppHome />} />
+              <Route path='share' element={<Share />} />
               <Route path='all-files' element={<AllFiles />} />
               <Route path='history' element={<History />} />
               <Route path='your-plans' element={<YourPlans />} />
               <Route path='settings' element={<Settings />} />
             </Route>
-            <Route path='auth' element={<Auth />}/>
+            <Route path='auth' element={<Auth />} />
           </Routes>
         </div>
       </Router>

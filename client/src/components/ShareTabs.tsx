@@ -1,6 +1,6 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import Dialogue from './Dialogue';
-import CopyLinkField from './ui/copylink-field';
+import CopyLinkField from './CopyLinkField';
 import UploadButton from './UploadButton';
 import IconSharingFile from '@/assets/sharing-file';
 

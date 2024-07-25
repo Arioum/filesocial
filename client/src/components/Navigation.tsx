@@ -40,7 +40,7 @@ const Navigation = () => {
             <Link to={link.path}>
               <NavigationMenuTrigger
                 className={
-                  pathname === link.path
+                  pathname === `/app/${link.path}`
                     ? 'bg-[#202020]  text-white dark:bg-white dark:text-black dark:focus:bg-white dark:focus:text-black '
                     : 'dark:bg-transparent'
                 }

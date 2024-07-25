@@ -340,16 +340,14 @@ export default function Landing() {
                     <Check className='w-5 h-5 fill-primary-foreground' />
                     <p>Password protection</p>
                   </div>
-                  <div className='flex items-center gap-2'>
-                    <Check className='w-5 h-5 fill-primary-foreground' />
-                    <p>Collaboration tools</p>
-                  </div>
                 </div>
                 <Button className='w-full'>Get Pro</Button>
               </div>
               <div className='bg-background p-6 lg:p-8 rounded-lg shadow-lg flex flex-col gap-6'>
                 <div className='space-y-2'>
-                  <h3 className='text-2xl font-bold'>Enterprise</h3>
+                  <h3 className='text-2xl font-bold'>
+                    Enterprise (Coming Soon)
+                  </h3>
                   <p className='text-4xl font-bold'>Contact us</p>
                   <p className='text-muted-foreground'>for pricing</p>
                 </div>
@@ -366,13 +364,9 @@ export default function Landing() {
                     <Check className='w-5 h-5 fill-primary' />
                     <p>Advanced security</p>
                   </div>
-                  <div className='flex items-center gap-2'>
-                    <Check className='w-5 h-5 fill-primary' />
-                    <p>Dedicated support</p>
-                  </div>
                 </div>
                 <Button variant='outline' className='w-full'>
-                  Contact Sales
+                  Coming Soon
                 </Button>
               </div>
             </div>
@@ -396,12 +390,12 @@ export default function Landing() {
               >
                 Try it Free
               </Link>
-              <Link
+              {/* <Link
                 to='#'
                 className='inline-flex h-10 items-center justify-center rounded-md border border-input bg-background px-8 text-sm font-medium shadow-sm transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50'
               >
                 Learn More
-              </Link>
+              </Link> */}
             </div>
           </div>
         </section>

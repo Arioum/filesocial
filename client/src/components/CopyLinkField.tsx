@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button } from './button';
+import { Button } from './ui/button';
 
 const CopyLinkField = ({ url }: { url: string }) => {
   const [copySuccess, setCopySuccess] = useState(false);
@@ -25,9 +25,9 @@ const CopyLinkField = ({ url }: { url: string }) => {
       <span className='text-[#334155] font-[600] dark:text-[#e4e4e4]'>{url}</span>
       <Button size='icon' onClick={copyToClipboard} className='dark:bg-[#09090b] hover:dark:bg-[#09090b]/80'>
         {copySuccess ? (
-          <img src='tick-icon.svg' alt='tick-icon' />
+          <img src='/tick-icon.svg' alt='tick-icon' />
         ) : (
-          <img src='copy-icon.svg' alt='copy-icon' />
+          <img src='/copy-icon.svg' alt='copy-icon' />
         )}
       </Button>
     </div>

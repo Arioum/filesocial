@@ -57,8 +57,8 @@ export function FileTable() {
         </TableRow>
       </TableHeader>
       <TableBody>
-        {invoices.map((invoice) => (
-          <TableRow key={invoice.shareId}>
+        {invoices.map((invoice, index) => (
+          <TableRow key={index}>
             <TableCell className='font-medium px-0'>
               {invoice.shareId}
             </TableCell>
