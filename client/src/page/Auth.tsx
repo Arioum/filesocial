@@ -1,7 +1,24 @@
-import { ProfileForm } from '@/components/Form';
-import { Link } from 'react-router-dom';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { userIsAuthenticated } from '@/hooks/useAuth';
+import FormTabs from '@/components/FormTabs';
 
 const Auth = () => {
+  const navigate = useNavigate();
+  const isAuthenticated = userIsAuthenticated();
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      console.log(isAuthenticated);
+
+      navigate('/app');
+    }
+  }, [isAuthenticated, navigate]);
+
+  // if (isLoading) {
+  //   return <div className='w-full h-full bg-white'>Loading...</div>;
+  // }
+
   return (
     <main className='w-full min-h-[100dvh] flex'>
       <section className='flex-1 bg-black text-white flex flex-col gap-10 items-center justify-center'>
@@ -29,8 +46,7 @@ const Auth = () => {
       </section>
       <section className='flex-1 flex'>
         <div className='flex-1 flex flex-col justify-center items-center'>
-          <ProfileForm />
-          <Link to='/app'>Skip for now</Link>
+          <FormTabs />
         </div>
       </section>
     </main>
