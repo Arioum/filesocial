@@ -1,0 +1,33 @@
+{
+  "subscription": {
+    "tiers": [
+      {
+        "level": 0,
+        "name": "free",
+        "price": 0,
+        "currency": "usd",
+        "features": {
+          "uploadLimit": 3,
+          "maxUploadSize": 10,
+          "fileRetentionTime": 15,
+          "shareTime": 10
+        },
+        "expires": false
+      },
+      {
+        "level": 1,
+        "name": "pro",
+        "price": 9,
+        "currency": "usd",
+        "features": {
+          "uploadLimit": 10,
+          "maxUploadSize": 2048,
+          "fileRetentionTime": 90,
+          "shareTime": 60
+        },
+        "expires": true,
+        "expiresIn": 30
+      }
+    ]
+  }
+}

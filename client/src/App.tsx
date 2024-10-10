@@ -18,18 +18,11 @@ import Receive from './components/Receive';
 import { Toaster } from './components/ui/sonner';
 
 const AppContent = () => {
-  const { isAuthenticated, isLoading, checkAuth } = useAuth();
+  // const { isAuthenticated, isLoading, checkAuth, isInitialized } = useAuth();
 
-  useEffect(() => {
-    if (!isAuthenticated && !isLoading) {
-      checkAuth();
-    }
-  }, [isAuthenticated, isLoading, checkAuth]);
-
-  if (isLoading) {
-    return <div>Loading...</div>; // Or a proper loading component
-  }
-
+  // if (!isInitialized || isLoading) {
+  //   return <div>Loading...</div>;
+  // }
   return (
     <Router>
       <Routes>
@@ -63,7 +56,7 @@ const App = () => {
       <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
         <div className="flex dark:bg-[#09090b] dark:text-[#fff]">
           <AppContent />
-          <Toaster className='border' position='bottom-right'/>
+          <Toaster className="border" position="bottom-right" />
         </div>
       </ThemeProvider>
     </RecoilRoot>

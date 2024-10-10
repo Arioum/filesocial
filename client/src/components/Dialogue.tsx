@@ -15,9 +15,17 @@ interface DialogueButton {
   children: string;
   desc: string;
   title: string;
+  handleCancel?: () => void;
+  handleContinue: () => void;
 }
 
-const Dialogue = ({ children, title, desc }: DialogueButton) => {
+const Dialogue = ({
+  children,
+  title,
+  desc,
+  handleCancel,
+  handleContinue,
+}: DialogueButton) => {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
@@ -31,8 +39,15 @@ const Dialogue = ({ children, title, desc }: DialogueButton) => {
           <AlertDialogDescription>{desc}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
-          <AlertDialogCancel className='dark:bg-[#09090b]'>Cancel</AlertDialogCancel>
-          <AlertDialogAction>Continue</AlertDialogAction>
+          <AlertDialogCancel
+            onClick={handleCancel}
+            className='dark:bg-[#09090b]'
+          >
+            Cancel
+          </AlertDialogCancel>
+          <AlertDialogAction onClick={handleContinue}>
+            Continue
+          </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>
