@@ -69,4 +69,6 @@ const uploadFiles = (req, res) => {
   }
 };
 
-module.exports = uploadFiles;
+const startSharing = (req, res) => {};
+
+module.exports = { uploadFiles, startSharing };

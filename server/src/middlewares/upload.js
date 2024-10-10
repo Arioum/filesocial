@@ -8,4 +8,4 @@ function uploadMiddleware(req, res, next) {
   next();
 }
 
-module.exports = uploadMiddleware;
+module.exports = { uploadMiddleware };

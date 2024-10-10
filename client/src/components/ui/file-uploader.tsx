@@ -1,16 +1,24 @@
-import { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 import { Progress } from '@/components/ui/progress';
+import { CloudUploadIcon } from 'lucide-react';
 
 export default function FileUploader() {
   const [file, setFile] = useState(null);
   const [progress, setProgress] = useState(0);
 
-  const handleDragOver = (e) => {
+  const handleDragOver = (e: {
+    preventDefault: () => void;
+    stopPropagation: () => void;
+  }) => {
     e.preventDefault();
     e.stopPropagation();
   };
 
-  const handleDrop = (e) => {
+  const handleDrop = (e: {
+    preventDefault: () => void;
+    stopPropagation: () => void;
+    dataTransfer: { files: any[] };
+  }) => {
     e.preventDefault();
     e.stopPropagation();
     const droppedFile = e.dataTransfer.files[0];
@@ -26,7 +34,9 @@ export default function FileUploader() {
     }, 100);
   };
 
-  const handleFileSelect = (e) => {
+  const handleFileSelect = (e: {
+    target: { files: SetStateAction<null>[] };
+  }) => {
     if (e.target.files) {
       setFile(e.target.files[0]);
       const interval = setInterval(() => {
@@ -78,26 +88,5 @@ export default function FileUploader() {
         </div>
       )}
     </div>
-  );
-}
-
-function CloudUploadIcon(props) {
-  return (
-    <svg
-      {...props}
-      xmlns='http://www.w3.org/2000/svg'
-      width='24'
-      height='24'
-      viewBox='0 0 24 24'
-      fill='none'
-      stroke='currentColor'
-      strokeWidth='2'
-      strokeLinecap='round'
-      strokeLinejoin='round'
-    >
-      <path d='M4 14.899A7 7 0 1 1 15.71 8h1.79a4.5 4.5 0 0 1 2.5 8.242' />
-      <path d='M12 12v9' />
-      <path d='m16 16-4-4-4 4' />
-    </svg>
   );
 }
