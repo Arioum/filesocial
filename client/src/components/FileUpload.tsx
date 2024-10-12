@@ -2,7 +2,7 @@ import React, { useState, useCallback } from 'react';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import { fileIdsState } from '@/recoil/file';
+import { fileIdsState, uploadCountState, progressState } from '@/recoil/file';
 import { useUser } from '@/hooks/useAuth';
 import { Progress } from './ui/progress';
 import { shareLimits } from '@/recoil/auth';
@@ -11,8 +11,11 @@ export const FileUpload = () => {
   const user = useUser();
   const uploadLimits = useRecoilValue(shareLimits);
   const [isUploading, setIsUploading] = useState(false);
-  const [progress, setProgress] = useState<{ [key: string]: number }>({});
+  const [progress, setProgress] = useRecoilState(progressState);
   const [uploadedFileIds, setUploadedFileIds] = useRecoilState(fileIdsState);
+  const [uploadCount, setUploadCount] = useRecoilState(uploadCountState);
+
+  console.log('Upload Limits:', uploadLimits);
 
   const uploadFile = useCallback(
     async (file: File) => {
@@ -53,15 +56,20 @@ export const FileUpload = () => {
         return null;
       }
     },
-    [user, uploadLimits]
+    [user, uploadLimits, setProgress]
   );
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     const uploadLimit = uploadLimits?.uploadLimit || 1;
 
-    if (files.length > uploadLimit) {
-      toast.error(`You can only upload up to ${uploadLimit} files at a time.`);
+    console.log('Files selected:', files.length);
+    console.log('Current upload count:', uploadCount);
+    console.log('Upload limit:', uploadLimit);
+
+    if (uploadCount + files.length > uploadLimit) {
+      toast.error(`You can only upload up to ${uploadLimit} files in total.`);
+      e.target.value = ''; // Reset file input
       return;
     }
 
@@ -70,24 +78,49 @@ export const FileUpload = () => {
     const results = await Promise.all(uploadPromises);
     const successfulUploads = results.filter((id): id is string => id !== null);
 
+    setUploadCount((prev) => prev + successfulUploads.length);
     setUploadedFileIds((prev) => [...prev, ...successfulUploads]);
     setIsUploading(false);
+    e.target.value = ''; // Reset file input after upload
+
+    if (uploadCount + successfulUploads.length >= uploadLimit) {
+      toast.info(`You have reached the maximum upload limit of ${uploadLimit} files.`);
+    }
+  };
+
+  const resetUploadCount = async () => {
+    const response = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/api/v1/cancel-uploads`, {
+      userId: user?.userId,
+      fileIds: uploadedFileIds,
+    });
+    console.log(response.data);
+
+    setUploadCount(0);
+    setUploadedFileIds([]);
+    setProgress({});
+    toast.success('Upload count reset. You can upload new files now.');
   };
 
   return (
-    <div>
-      <input type="file" onChange={handleFileChange} multiple />
+    <div className='flex flex-col gap-4'>
+      <input type="file" onChange={handleFileChange} multiple disabled={uploadCount >= (uploadLimits?.uploadLimit || 1)} />
       {isUploading && <p>Uploading...</p>}
-      {Object.entries(progress).map(([fileName, value]) => (
-        <div key={fileName}>
-          <p>{fileName}</p>
-          <Progress value={value} className="h-[10px] w-[100px]" />
-        </div>
-      ))}
+
+      <div className="border border-[#eee] rounded-[8px] px-4 my-3">
+        {Object.entries(progress).map(([fileName, value]) => (
+          <div key={fileName} className="flex justify-between items-center py-2 border-b">
+            <p>{fileName}</p>
+            <Progress value={value} className="h-[10px] w-[100px]" />
+          </div>
+        ))}
+      </div>
+
       <p>Uploaded File IDs:</p>
       {uploadedFileIds.map((fileId) => (
         <p key={fileId}>{fileId}</p>
       ))}
+      <p>Files uploaded: ({uploadCount}/{uploadLimits?.uploadLimit})</p>
+      {uploadedFileIds.length > 0 && <button onClick={resetUploadCount}>Reset Upload Count</button>}
     </div>
   );
 };

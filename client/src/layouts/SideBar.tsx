@@ -2,17 +2,10 @@ import { Link, Outlet } from 'react-router-dom';
 import { useUser } from '@/hooks/useAuth';
 import Navigation from '@/components/Navigation';
 import FileSocialLogo from '@/assets/logo';
-import { ProfileCard } from '@/components/ProfileCard';
+import { ProfileViewerCard } from '@/components/ProfileViewerCard';
 
 const SideBar = () => {
   const user = useUser();
-  // useEffect(() => {
-
-  //   if (!sessionStorage.getItem('reloaded')) {
-  //     sessionStorage.setItem('reloaded', 'true');
-  //     window.location.reload();
-  //   }
-  // }, []);
 
   return (
     <>
@@ -23,7 +16,7 @@ const SideBar = () => {
           </Link>
           <Navigation />
         </div>
-        {user && <ProfileCard userName={user.userName} />}
+        {user && <ProfileViewerCard userName={user.userName} />}
       </header>
       <Outlet />
     </>

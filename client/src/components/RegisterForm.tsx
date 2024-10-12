@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -8,17 +8,10 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { AlertCard } from './AlertCard';
+import { useAuth } from '@/hooks/useAuth';
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/;
 
@@ -32,8 +25,7 @@ const formSchema = z
       })
       .max(50)
       .regex(passwordRegex, {
-        message:
-          'Password must contain at least one special character, one number, and one uppercase letter.',
+        message: 'Password must contain at least one special character, one number, and one uppercase letter.',
       }),
     confirmPassword: z
       .string()
@@ -50,13 +42,7 @@ const formSchema = z
 export function RegisterForm() {
   const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const token = localStorage.getItem('jwtToken-fileSocial');
-    if (token) {
-      navigate('/app');
-    }
-  }, [navigate]);
+  const { login } = useAuth();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -69,19 +55,16 @@ export function RegisterForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post(
-        'http://localhost:4000/api/v1/auth/register',
-        {
-          formData: values,
-        }
-      );
-      const jwtToken = res.data.token;
-      if (jwtToken) {
-        localStorage.setItem('jwtToken-fileSocial', jwtToken);
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/api/v1/auth/register`, {
+        formData: values,
+      });
+      const { token, user } = res.data;
+      if (token && user) {
+        login(token, user);
         navigate('/app');
       }
     } catch (err: any) {
-      setErrorMessage(err.response.data.message);
+      setErrorMessage(err.response?.data?.message || 'Registration failed');
       console.error('Registration failed:', err);
     }
   }
@@ -89,18 +72,15 @@ export function RegisterForm() {
   return (
     <Form {...form}>
       {errorMessage && <AlertCard title={errorMessage} />}
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='max-w-[350px] flex flex-col gap-4'
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[350px] flex flex-col gap-4">
         <FormField
           control={form.control}
-          name='email'
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email Address</FormLabel>
               <FormControl>
-                <Input placeholder='Email' {...field} />
+                <Input placeholder="Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -108,16 +88,15 @@ export function RegisterForm() {
         />
         <FormField
           control={form.control}
-          name='password'
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type='password' placeholder='Password' {...field} />
+                <Input type="password" placeholder="Password" {...field} />
               </FormControl>
-              <FormDescription className='text-[.75rem]'>
-                Password must contain at least 8 characters, one special
-                character, one number, and one uppercase letter.
+              <FormDescription className="text-[.75rem]">
+                Password must contain at least 8 characters, one special character, one number, and one uppercase letter.
               </FormDescription>
               <FormMessage />
             </FormItem>
@@ -125,22 +104,18 @@ export function RegisterForm() {
         />
         <FormField
           control={form.control}
-          name='confirmPassword'
+          name="confirmPassword"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Confirm Password</FormLabel>
               <FormControl>
-                <Input
-                  type='password'
-                  placeholder='Confirm Password'
-                  {...field}
-                />
+                <Input type="password" placeholder="Confirm Password" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type='submit'>Submit</Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );

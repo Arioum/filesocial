@@ -1,37 +1,36 @@
 const router = require('express').Router();
-// const multer = require('multer');
-// const storage = multer.memoryStorage();
-// const upload = multer({ storage });
 
 // Controllers
-// const { uploadFiles } = require('../controllers/upload.controller');
-const { userRegister, userLogin } = require('../controllers/auth.controller');
-const { uploadFile, getAllFilesByUserId, downloadFile } = require('../controllers/file.controller');
-const { createShareAction, cancelShareAction, receiveSharedFiles } = require('../controllers/share.controller');
-const { createStripePaymentIntent, createSubscription } = require('../controllers/subscription.controller');
+const { userRegister, userLogin, editProfileDetails, getUserStats } = require('../controllers/auth.controller');
+const { uploadFile, getAllFilesByUserId, downloadFile, cancelUploads } = require('../controllers/file.controller');
+const { createShareAction, cancelShareAction, receiveSharedFiles, getShareHistory, getActiveShare } = require('../controllers/share.controller');
+const { createStripePaymentIntent, createSubscription, getSubscriptionDetails } = require('../controllers/subscription.controller');
 
 // Middlewares
-// const { uploadMiddleware } = require('../middlewares/upload');
 const { requireAuthentication, authorize } = require('../middlewares/jwtMiddleware');
 
 // Routes
-// router.post('/upload', upload.single('file'), uploadFiles);
 // User
 router.post('/auth', requireAuthentication, authorize);
 router.post('/auth/register', userRegister);
 router.post('/auth/login', userLogin);
+router.post('/update-profile', requireAuthentication, editProfileDetails);
+router.get('/get-user-stats', requireAuthentication, getUserStats);
 // File
 router.post('/get-presigned-url', uploadFile);
 router.get('/download-file/:fileId', downloadFile);
-router.get('/get-all-files', getAllFilesByUserId);
+router.get('/get-all-files', requireAuthentication, getAllFilesByUserId);
+router.post('/cancel-uploads', requireAuthentication, cancelUploads);
 // Share
 router.post('/share/start', requireAuthentication, createShareAction);
 router.post('/share/stop', requireAuthentication, cancelShareAction);
+router.get('/get-active-share', requireAuthentication, getActiveShare);
+router.get('/get-share-history', requireAuthentication, getShareHistory);
 router.get('/share/:sharableCode', receiveSharedFiles);
-
-// Payments
-router.post('/subscribe/:tier/payment-intent', createStripePaymentIntent);
-router.post('/subscribe/:tier/', createSubscription);
+// Subscription - payments
+router.post('/subscribe/:tier/payment-intent', requireAuthentication, createStripePaymentIntent);
+router.post('/subscribe/:tier/', requireAuthentication, createSubscription);
+router.get('/your-plan-details', requireAuthentication, getSubscriptionDetails);
 
 // Health check
 router.get('/', (req, res) => {

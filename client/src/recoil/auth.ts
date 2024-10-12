@@ -14,6 +14,7 @@ export interface User {
     fileRetentionTime: number;
     shareTime: number;
   };
+  createdAt: string;
 }
 
 export interface AuthState {
@@ -50,10 +51,64 @@ export const userSelector = selector<User | null>({
   },
 });
 
+export const formattedUserCreatedAt = selector({
+  key: 'formattedUserCreatedAt',
+  get: ({ get }) => {
+    const user = get(userSelector);
+
+    if (!user || !user.createdAt) return null;
+
+    const createdAtDate = new Date(user.createdAt);
+
+    const day = String(createdAtDate.getDate()).padStart(2, '0'); // Format day with leading zero
+    const month = String(createdAtDate.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed, so +1
+    const year = createdAtDate.getFullYear();
+
+    return `${day}/${month}/${year}`;
+  },
+});
+
 export const shareLimits = selector({
   key: 'shareLimits',
   get: ({ get }) => {
     const limits = get(authState).user?.shareLimits;
     return limits;
+  },
+});
+
+export const userSubscriptionLevel = selector({
+  key: 'userSubscriptionLevel',
+  get: ({ get }) => {
+    const subscriptionLevel = get(userSelector)?.subscriptionLevel;
+    return subscriptionLevel;
+  },
+});
+
+export interface SubscriptionState {
+  userId: string;
+  createdAt: Date;
+  expiresAt: Date;
+  isExpired: boolean;
+}
+
+export const subscriptionDetails = atom<SubscriptionState | null>({
+  key: 'subscriptionDetails',
+  default: null,
+});
+
+export const formattedSubscriptionDetails = selector({
+  key: 'formattedSubscriptionDetails',
+  get: ({ get }) => {
+    const details = get(subscriptionDetails);
+
+    if (!details || !details.expiresAt) return null;
+
+    const expiresAtDate = new Date(details.expiresAt);
+    const options: Intl.DateTimeFormatOptions = {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    };
+    return expiresAtDate.toLocaleDateString('en-US', options);
   },
 });

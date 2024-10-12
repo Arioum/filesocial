@@ -9,9 +9,6 @@ async function checkAndMarkExpiredFiles() {
   const expiredFiles = await File.find({ isExpired: false, expiresAt: { $lte: now } });
 
   for (const file of expiredFiles) {
-    file.isExpired = true;
-    await file.save(); // Update the file record
-
     const fileKey = file.fileUrl.split('/').slice(-2).join('/');
     console.log(fileKey);
 
@@ -23,6 +20,9 @@ async function checkAndMarkExpiredFiles() {
     try {
       const command = new DeleteObjectCommand(deleteParams);
       await s3.send(command);
+
+      file.isExpired = true;
+      await file.save(); // Update the file record
       console.log(`Deleted file from S3: ${file.fileName}`);
     } catch (err) {
       console.error(`Error deleting file from S3: ${err.message}`);

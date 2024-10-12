@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { useUser } from '@/hooks/useAuth';
@@ -18,10 +18,11 @@ const Receive: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [isDownloading, setIsDownloading] = useState<boolean>(false);
   const [isExpired, setIsExpired] = useState<boolean>(false);
+  const [signUpLead, setSignUpLead] = useState(false);
 
   useEffect(() => {
     if (user) {
-      navigate('/app/share');
+      navigate('/app/share?action=receive');
     }
   }, [user, navigate]);
 
@@ -110,6 +111,7 @@ const Receive: React.FC = () => {
     }
 
     setIsDownloading(false);
+    setSignUpLead(true)
   };
 
   if (isLoading) {
@@ -129,6 +131,12 @@ const Receive: React.FC = () => {
         <Button onClick={downloadFiles} disabled={isDownloading || isExpired} className="mt-4">
           {isDownloading ? 'Downloading...' : 'Download All Files'}
         </Button>
+        {signUpLead && (
+          <div className="mt-10 flex flex-col gap-2 text-center">
+            <span className='text-[1.2rem] font-[700]'>Loved it? Try us out!</span>
+            <Link to="/auth" className='underline' reloadDocument>Join</Link>
+          </div>
+        )}
       </div>
     </main>
   );

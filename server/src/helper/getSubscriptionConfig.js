@@ -7,6 +7,9 @@ const tiers = subscriptionConfig.tiers;
 const getSubscriptionDetailsByLevel = (subscriptionLevel) => {
   return tiers.find((tier) => tier.level === subscriptionLevel);
 };
+const getSubscriptionDetailsByTier = (tierName) => {
+  return tiers.find((tier) => tier.name === tierName);
+};
 
 const getSubscriptionLevelByUserID = async (userId) => {
   try {
@@ -17,4 +20,4 @@ const getSubscriptionLevelByUserID = async (userId) => {
   }
 };
 
-module.exports = { getSubscriptionDetailsByLevel, getSubscriptionLevelByUserID };
+module.exports = { getSubscriptionDetailsByLevel, getSubscriptionDetailsByTier, getSubscriptionLevelByUserID };

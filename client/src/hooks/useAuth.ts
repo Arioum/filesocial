@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import axios from 'axios';
-import { authState, isAuthenticatedSelector, userSelector, User, AuthState } from '@/recoil/auth';
+import { authState, isAuthenticatedSelector, userSelector, User } from '@/recoil/auth';
 
 export const useAuth = () => {
   const [auth, setAuth] = useRecoilState(authState);
@@ -28,6 +28,18 @@ export const useAuth = () => {
       token: null,
     });
     console.log('Auth state after logout:', { isAuthenticated: false, isLoading: false, user: null, token: null });
+  };
+
+  const updateUser = (updatedUserData: Partial<User>) => {
+    setAuth((prevAuth) => ({
+      ...prevAuth,
+      user: prevAuth.user ? { ...prevAuth.user, ...updatedUserData } : null,
+    }));
+    if (auth.user) {
+      const updatedUser = { ...auth.user, ...updatedUserData };
+      localStorage.setItem('user-fileSocial', JSON.stringify(updatedUser));
+    }
+    console.log('User updated:', updatedUserData);
   };
 
   const checkAuth = async () => {
@@ -68,7 +80,7 @@ export const useAuth = () => {
     }
   }, [isInitialized]);
 
-  return { ...auth, login, logout, checkAuth, isInitialized };
+  return { ...auth, login, logout, updateUser, checkAuth, isInitialized };
 };
 
 export const userIsAuthenticated = () => useRecoilValue(isAuthenticatedSelector);

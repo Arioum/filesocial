@@ -1,49 +1,30 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import { Card, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from './ui/button';
-import { LogOut } from 'lucide-react';
-import clsx from 'clsx';
-import { useAuth } from '@/hooks/useAuth';
+import { useUser } from '@/hooks/useAuth';
+import { formattedUserCreatedAt, userSubscriptionLevel } from '@/recoil/auth';
+import { useRecoilValue } from 'recoil';
+import { EditUserDialog } from './EditUserDialog';
+import ProBadge from '@/assets/pro-badge';
 
-interface ProfileCardProps {
-  userName: string;
-  className?: string;
-}
-
-export function ProfileCard({
-  userName = 'User',
-  className,
-}: ProfileCardProps) {
-  const { pathname } = useLocation();
-  const navigate = useNavigate();
-  const { logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-    navigate('/auth');
-  };
-
+const ProfileCard = () => {
+  const user = useUser();
+  const subscriptionLevel = useRecoilValue(userSubscriptionLevel);
+  const joinedDate = useRecoilValue(formattedUserCreatedAt);
   return (
-    <Card
-      className={clsx(
-        className,
-        'w-full bg-slate-100 p-[8px_12px] flex justify-between items-center'
-      )}
-    >
-      <div className='flex flex-col'>
-        <CardHeader className='p-0 leading-0'>
-          <CardTitle className='text-[.9rem] m-0 p-0'>{userName}</CardTitle>
-        </CardHeader>
-        <Link
-          to={`${pathname}/profile`}
-          className='hover:underline text-[.80rem] m-0 p-0 leading-0'
-        >
-          View profile
-        </Link>
+    <section className="w-[400px] mx-auto flex gap-6 rounded-[10px] items-center justify-center">
+      <div className="w-[120px] h-[120px] rounded-[100px]">
+        <img src="/avatar.svg" alt="avatar" className="w-full" />
       </div>
-      <Button className='max-h-fit max-w-fit p-2' onClick={handleLogout}>
-        <LogOut className='h-5 w-5' />
-      </Button>
-    </Card>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center gap-2">
+          <h2 className="text-[20px] font-[900] text-[#292929] font-secondary leading-3">{user?.userName}</h2>
+          {subscriptionLevel === 1 && <ProBadge />}
+        </div>
+        <div className="">
+          <p className="text-[14px] text-[#64748B] font-[900] font-secondary leading-3">Joined on {joinedDate}</p>
+        </div>
+        <EditUserDialog>Edit</EditUserDialog>
+      </div>
+    </section>
   );
-}
+};
+
+export default ProfileCard;

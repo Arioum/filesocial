@@ -107,4 +107,23 @@ const downloadFile = async (req, res) => {
   }
 };
 
-module.exports = { getAllFilesByUserId, uploadFile, downloadFile };
+const cancelUploads = async (req, res) => {
+  const { fileIds } = req.body;
+
+  try {
+    for (const fileId of fileIds) {
+      const file = await File.findById(fileId);
+
+      if (file) {
+        file.expiresAt = Date.now();
+        await file.save();
+      }
+    }
+    res.status(200).json({ error: 'Failed to generate download URL' });
+  } catch (error) {
+    console.error("r",error);
+    res.status(500).json({ error: 'Failed to generate download URL' });
+  }
+};
+
+module.exports = { getAllFilesByUserId, uploadFile, downloadFile, cancelUploads };

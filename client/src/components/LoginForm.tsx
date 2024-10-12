@@ -1,24 +1,16 @@
 'use client';
 
-// import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 import { z } from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
-
 import { Button } from '@/components/ui/button';
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { useAuth } from '@/hooks/useAuth';
+import { AlertCard } from './AlertCard';
+import { useState } from 'react';
 
 const formSchema = z.object({
   email: z.string().email(),
@@ -26,6 +18,7 @@ const formSchema = z.object({
 });
 
 export function LoginForm() {
+  const [errorMessage, setErrorMessage] = useState(null);
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -48,26 +41,24 @@ export function LoginForm() {
         login(token, user);
         navigate('/app');
       }
-    } catch (err) {
-      // setResError(err.response.data.message);
+    } catch (err: any) {
+      setErrorMessage(err.response.data.message);
       console.error('Login failed:', err);
     }
   }
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className='max-w-[350px] flex flex-col gap-4'
-      >
+      {errorMessage && <AlertCard title={errorMessage} />}
+      <form onSubmit={form.handleSubmit(onSubmit)} className="max-w-[350px] flex flex-col gap-4">
         <FormField
           control={form.control}
-          name='email'
+          name="email"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input placeholder='Enter you Email' {...field} />
+                <Input placeholder="Enter you Email" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -75,22 +66,19 @@ export function LoginForm() {
         />
         <FormField
           control={form.control}
-          name='password'
+          name="password"
           render={({ field }) => (
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input type='password' placeholder='Password' {...field} />
+                <Input type="password" placeholder="Password" {...field} />
               </FormControl>
-              <FormDescription>
-                Password must contain at least 8 characters, one special
-                character, one number, and one uppercase letter.
-              </FormDescription>
+              <FormDescription>Password must contain at least 8 characters, one special character, one number, and one uppercase letter.</FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type='submit'>Submit</Button>
+        <Button type="submit">Submit</Button>
       </form>
     </Form>
   );

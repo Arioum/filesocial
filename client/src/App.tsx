@@ -1,9 +1,7 @@
-import { useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import { ThemeProvider } from './lib/theme-provider';
 import { ProtectedRoute } from './lib/protected-routes';
-import { useAuth } from '@/hooks/useAuth';
 import Auth from './page/Auth';
 import SideBar from './layouts/SideBar';
 import AppHome from './page/AppHome';
@@ -16,13 +14,9 @@ import Landing from './page/Landing';
 import NotFound from './page/NotFound';
 import Receive from './components/Receive';
 import { Toaster } from './components/ui/sonner';
+import Profile from './page/Profile';
 
 const AppContent = () => {
-  // const { isAuthenticated, isLoading, checkAuth, isInitialized } = useAuth();
-
-  // if (!isInitialized || isLoading) {
-  //   return <div>Loading...</div>;
-  // }
   return (
     <Router>
       <Routes>
@@ -41,6 +35,7 @@ const AppContent = () => {
           <Route path="history" element={<History />} />
           <Route path="your-plans" element={<YourPlans />} />
           <Route path="settings" element={<Settings />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
         <Route path="auth" element={<Auth />} />
         <Route path="share/:sharableCode" element={<Receive />} />
@@ -53,7 +48,7 @@ const AppContent = () => {
 const App = () => {
   return (
     <RecoilRoot>
-      <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
+      <ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">
         <div className="flex dark:bg-[#09090b] dark:text-[#fff]">
           <AppContent />
           <Toaster className="border" position="bottom-right" />

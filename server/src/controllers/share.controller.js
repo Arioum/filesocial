@@ -2,6 +2,7 @@ const { generateUniqueSharableCode } = require('../helper/generateUniqueSharable
 const { getSubscriptionLevelByUserID } = require('../helper/getSubscriptionConfig');
 const { Share, File } = require('../models/fileShare.model');
 const { findUserById } = require('../helper/user');
+const Stats = require('../models/stats.model');
 
 const createShareAction = async (req, res) => {
   const { userId } = req.user;
@@ -35,7 +36,9 @@ const createShareAction = async (req, res) => {
 
     await newShare.save();
 
-    res.status(200).json({ message: 'Share action created successfully', sharableCode: generatedCode, expiresAt: expiresAt });
+    await Stats.findOneAndUpdate({ userId }, { $setOnInsert: { userId } }, { upsert: true });
+
+    res.status(200).json({ message: 'Share action created successfully', shareId: newShare._id, sharableCode: generatedCode, expiresAt: expiresAt });
   } catch (error) {
     console.error('Error in createShareAction:', error);
     return res.status(500).json({ message: 'Internal Server Error' });
@@ -43,18 +46,34 @@ const createShareAction = async (req, res) => {
 };
 
 const cancelShareAction = async (req, res) => {
-  const { sharableCode } = req.params;
+  const { shareId } = req.body;
 
   try {
-    const share = await Share.find({ sharableCode, status: 'active' });
-    console.log('share', share);
+    const share = await Share.findOne({ _id: shareId, status: 'active' });
 
     if (!share) {
       return res.status(400).json({ message: 'The shared code does not exist or it has already expired' });
     }
-    share.status = 'inactive';
+    share.expiresAt = Date.now();
     await share.save();
     res.status(200).json({ message: 'Share cancelled successfully' });
+  } catch (error) {
+    console.error('Error in cancelShareAction:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+const getActiveShare = async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const share = await Share.findOne({ userId, status: 'active' });
+    console.log('share', share);
+
+    if (!share) {
+      return res.status(400).json({ message: 'The shared has expired', share: null });
+    }
+    res.status(200).json({ message: 'Share retrieved successfully', shareId: share._id, sharableCode: share.sharableCode, expiresAt: share.expiresAt });
   } catch (error) {
     console.error('Error in cancelShareAction:', error);
     return res.status(500).json({ message: 'Internal Server Error' });
@@ -83,4 +102,21 @@ const receiveSharedFiles = async (req, res) => {
   }
 };
 
-module.exports = { createShareAction, cancelShareAction, receiveSharedFiles };
+const getShareHistory = async (req, res) => {
+  const { userId } = req.user;
+
+  try {
+    const shareList = await Share.find({ userId }).limit(10).sort({ createdAt: -1 });
+
+    if (shareList.length === 0) {
+      return res.status(200).json({ shareList, message: 'You have no shares yet' });
+    }
+
+    return res.status(200).json({ message: 'Share History fetched', shareList });
+  } catch (error) {
+    console.error('Error in getShareHistory:', error);
+    return res.status(500).json({ message: 'Internal Server Error' });
+  }
+};
+
+module.exports = { createShareAction, cancelShareAction, getActiveShare, receiveSharedFiles, getShareHistory };
