@@ -24,14 +24,14 @@ export const FileUploader = () => {
   const uploadFile = useCallback(
     async (file: File) => {
       const { name: fileName, type: fileType, size: fileSize } = file;
-      setProgress((prev) => ({ ...prev, [fileName]: 0 }));
-
       const maxUploadSize = uploadLimits?.maxUploadSize || (user?.subscriptionLevel === 1 ? 2048 : 10);
 
       if (fileSize > maxUploadSize * 1024 * 1024) {
         toast.error(`File ${fileName} exceeds size limit. Max allowed size: ${maxUploadSize}MB`);
         return null;
       }
+
+      setProgress((prev) => ({ ...prev, [fileName]: 0 }));
 
       try {
         const response = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/api/v1/get-presigned-url`, {
@@ -57,6 +57,11 @@ export const FileUploader = () => {
       } catch (err) {
         console.error(`Error uploading file ${fileName}:`, err);
         toast.error(`Upload failed for ${fileName}: ${axios.isAxiosError(err) ? err.response?.data.message || err.message : 'Unexpected error'}`);
+        setProgress((prev) => {
+          const newProgress = { ...prev };
+          delete newProgress[fileName];
+          return newProgress;
+        });
         return null;
       }
     },
@@ -121,7 +126,7 @@ export const FileUploader = () => {
     setUploadCount(0);
     setUploadedFileIds([]);
     setProgress({});
-    toast.success('Upload count reset. You can upload new files now.');
+    toast.success('Upload reset. You can upload new files now.');
   };
 
   return (
@@ -156,8 +161,8 @@ export const FileUploader = () => {
 
       <div className="border border-[#eee] rounded-[8px] px-4 my-3 w-full max-w-md">
         {Object.entries(progress).map(([fileName, value]) => (
-          <div key={fileName} className="flex justify-between items-center py-2 border-b">
-            <p>{fileName}</p>
+          <div key={fileName} className="flex gap-4 justify-between items-center py-2 ">
+            <p className='truncate max-w-[300px]'>{fileName}</p>
             <Progress value={value} className="h-[10px] w-[100px]" />
           </div>
         ))}
@@ -168,7 +173,7 @@ export const FileUploader = () => {
         <p key={fileId}>{fileId}</p>
       ))} */}
       {uploadedFileIds.length > 0 && <Button onClick={resetUploadCount}>Reset Uploads</Button>}
-      <p className='my-2'>
+      <p className="my-2">
         Files uploaded: ({uploadCount}/{uploadLimits?.uploadLimit})
       </p>
     </div>

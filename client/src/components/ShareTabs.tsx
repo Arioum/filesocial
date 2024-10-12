@@ -87,10 +87,10 @@ const ShareTabs = () => {
             Authorization: `Bearer ${token}`,
           },
         });
-        console.log(res.data);
 
-        if (res.status === 400) {
+        if (res.data.share === null) {
           setShareStateData(null);
+          return;
         }
         setShareStateData(res.data);
       } catch (err) {
@@ -99,6 +99,8 @@ const ShareTabs = () => {
     };
     getActiveShares();
   }, []);
+
+  console.log('shareStateData', shareStateData);
 
   return (
     <Tabs defaultValue={defaultTab} className="w-[400px] flex flex-col gap-[1em] items-center">

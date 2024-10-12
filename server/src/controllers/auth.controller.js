@@ -55,7 +55,6 @@ const userRegister = async (req, res) => {
     }
 
     const { email, password } = req.body.formData;
-    console.log('Extracted email and password:', email, password);
 
     const userSchema = zod.object({
       email: zod.string().email(),
@@ -69,7 +68,6 @@ const userRegister = async (req, res) => {
     }
 
     const existingUser = await User.findOne({ email: email });
-    console.log('Existing user:', existingUser);
 
     if (existingUser) {
       return res.status(409).json({ message: 'User already exists. Please login instead.' });
@@ -88,7 +86,7 @@ const userRegister = async (req, res) => {
 
     return res
       .status(201)
-      .json({ token, user: { userId: _id, userName, email, subscriptionLevel, shareLimits, createdAt: user.createdAt }, message: 'User created successfully' });
+      .json({ token, user: { userId: _id, userName, email, subscriptionLevel, shareLimits, createdAt: newUser.createdAt }, message: 'User created successfully' });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ message: 'Server error', error: error.message, stack: error.stack });

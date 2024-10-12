@@ -55,6 +55,7 @@ const cancelShareAction = async (req, res) => {
       return res.status(400).json({ message: 'The shared code does not exist or it has already expired' });
     }
     share.expiresAt = Date.now();
+    share.status = 'inactive';
     await share.save();
     res.status(200).json({ message: 'Share cancelled successfully' });
   } catch (error) {
@@ -71,7 +72,7 @@ const getActiveShare = async (req, res) => {
     console.log('share', share);
 
     if (!share) {
-      return res.status(400).json({ message: 'The shared has expired', share: null });
+      return res.status(200).json({ message: 'The shared has expired', share: null });
     }
     res.status(200).json({ message: 'Share retrieved successfully', shareId: share._id, sharableCode: share.sharableCode, expiresAt: share.expiresAt });
   } catch (error) {
