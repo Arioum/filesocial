@@ -32,7 +32,7 @@ export function LoginForm() {
 
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const res = await axios.post('http://localhost:4000/api/v1/auth/login', {
+      const res = await axios.post(`${import.meta.env.VITE_BACKEND_API_URL}/api/v1/auth/login`, {
         formData: values,
       });
 
