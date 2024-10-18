@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { ActivityIcon, CloudIcon, DownloadIcon, FolderIcon, LockIcon, TabletsIcon } from 'lucide-react';
+import { ActivityIcon, CloudIcon, DownloadIcon } from 'lucide-react';
 import { Check } from '@/assets/icons';
 
 export default function Landing() {
@@ -168,20 +168,20 @@ export default function Landing() {
               </div>
             </div>
             <div className="mx-auto grid max-w-5xl items-start gap-8 sm:grid-cols-2 md:gap-12 lg:grid-cols-3">
-              <div className="grid gap-1">
+              {/* <div className="grid gap-1">
                 <div className="flex items-center gap-2">
                   <LockIcon className="h-6 w-6 text-primary" />
                   <h3 className="text-lg font-bold">Advanced Security</h3>
                 </div>
                 <p className="text-sm text-muted-foreground">Protect your files with end-to-end encryption and multi-factor authentication.</p>
-              </div>
-              <div className="grid gap-1">
+              </div> */}
+              {/* <div className="grid gap-1">
                 <div className="flex items-center gap-2">
                   <TabletsIcon className="h-6 w-6 text-primary" />
                   <h3 className="text-lg font-bold">Seamless Collaboration</h3>
                 </div>
                 <p className="text-sm text-muted-foreground">Invite team members to view, edit, and comment on shared files in real-time.</p>
-              </div>
+              </div> */}
               <div className="grid gap-1">
                 <div className="flex items-center gap-2">
                   <DownloadIcon className="h-6 w-6 text-primary" />
@@ -189,13 +189,13 @@ export default function Landing() {
                 </div>
                 <p className="text-sm text-muted-foreground">Enjoy lightning-fast file uploads and downloads, even for large files.</p>
               </div>
-              <div className="grid gap-1">
+              {/* <div className="grid gap-1">
                 <div className="flex items-center gap-2">
                   <FolderIcon className="h-6 w-6 text-primary" />
                   <h3 className="text-lg font-bold">Organized Storage</h3>
                 </div>
                 <p className="text-sm text-muted-foreground">Keep your files organized with a user-friendly folder structure and powerful search.</p>
-              </div>
+              </div> */}
               <div className="grid gap-1">
                 <div className="flex items-center gap-2">
                   <ActivityIcon className="h-6 w-6 text-primary" />
@@ -234,15 +234,15 @@ export default function Landing() {
                 <div className="grid gap-4">
                   <div className="flex items-center gap-2">
                     <Check className="w-5 h-5 fill-primary" />
-                    <p>1GB storage</p>
+                    <p>Upload upto 3 files</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-5 h-5 fill-primary" />
-                    <p>5 file uploads per month</p>
+                    <p>10MB share limit</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-5 h-5 fill-primary" />
-                    <p>View-only access</p>
+                    <p>3mins sharing window</p>
                   </div>
                 </div>
                 <Button variant="outline" className="w-full">
@@ -260,15 +260,15 @@ export default function Landing() {
                 <div className="grid gap-4">
                   <div className="flex items-center gap-2">
                     <Check className="w-5 h-5 fill-primary-foreground" />
-                    <p>100GB storage</p>
+                    <p>Upload upto 10 files</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-5 h-5 fill-primary-foreground" />
-                    <p>Unlimited file uploads</p>
+                    <p>2GB share limit</p>
                   </div>
                   <div className="flex items-center gap-2">
                     <Check className="w-5 h-5 fill-primary-foreground" />
-                    <p>Password protection</p>
+                    <p>15mins sharing window</p>
                   </div>
                 </div>
                 <Button className="w-full">

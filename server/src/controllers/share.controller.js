@@ -69,7 +69,6 @@ const getActiveShare = async (req, res) => {
 
   try {
     const share = await Share.findOne({ userId, status: 'active' });
-    console.log('share', share);
 
     if (!share) {
       return res.status(200).json({ message: 'The shared has expired', share: null });

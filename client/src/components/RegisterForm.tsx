@@ -12,6 +12,7 @@ import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, For
 import { Input } from '@/components/ui/input';
 import { AlertCard } from './AlertCard';
 import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'sonner';
 
 const passwordRegex = /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])/;
 
@@ -62,6 +63,7 @@ export function RegisterForm() {
       if (token && user) {
         login(token, user);
         navigate('/app');
+        toast.success('User registered successfully');
       }
     } catch (err: any) {
       setErrorMessage(err.response?.data?.message || 'Registration failed');

@@ -6,6 +6,7 @@ import StatCard from './StatCard';
 const YourStats = () => {
   const { token } = useAuth();
   const [stats, setStats] = useState<any | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getStats = async () => {
@@ -16,11 +17,11 @@ const YourStats = () => {
       });
       console.log('stats', response.data.userStats);
       setStats(response.data.userStats);
+      setIsLoading(false);
     };
     getStats();
   }, []);
 
-  // Map the fetched stats into the card data structure
   const cardData = stats
     ? [
         {
@@ -41,11 +42,20 @@ const YourStats = () => {
       ]
     : [];
 
+  if (isLoading) {
+    return <></>;
+  }
+
   return (
     <section className="mx-auto flex flex-col gap-3 rounded-[10px] items-center justify-center py-3">
       <section className="flex flex-col gap-1 items-center justify-center p-2">
         <h2 className="text-[24px] font-[800] font-secondary">Your Stats</h2>
       </section>
+      {!stats && (
+        <div>
+          <p>Not enough data to populate your stats</p>
+        </div>
+      )}
       <div className="flex gap-3">
         {cardData.map((card, index) => (
           <StatCard key={index} title={card.title} footer={card.footer} value={card.value} />

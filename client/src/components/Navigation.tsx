@@ -1,9 +1,4 @@
-import {
-  NavigationMenu,
-  NavigationMenuItem,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-} from '@/components/ui/navigation-menu';
+import { NavigationMenu, NavigationMenuItem, NavigationMenuList, NavigationMenuTrigger } from '@/components/ui/navigation-menu';
 import { Link, useLocation } from 'react-router-dom';
 
 const navLinks = [
@@ -33,11 +28,11 @@ const Navigation = () => {
   const { pathname } = useLocation();
 
   return (
-    <NavigationMenu className='w-[100%]'>
+    <NavigationMenu className="w-[100%]">
       <NavigationMenuList>
         {navLinks.map((link, index) => (
-          <NavigationMenuItem key={index} className='w-[100%]'>
-            <Link to={link.path}>
+          <NavigationMenuItem key={index} className="w-[100%]">
+            <Link to={link.path} reloadDocument>
               <NavigationMenuTrigger
                 className={
                   pathname === `/app/${link.path}`

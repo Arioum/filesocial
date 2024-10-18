@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
+import { toast } from 'sonner';
 
 const UpgradePlan: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -78,6 +79,7 @@ const UpgradePlan: React.FC = () => {
         console.log('Updated user data:', response.data.user);
 
         setSuccess(true);
+        toast.success("Your Subscription is now Active")
       }
     } catch (err: any) {
       console.error('Payment error:', err);
@@ -104,11 +106,11 @@ const UpgradePlan: React.FC = () => {
   return (
     <div className="w-full max-w-md mx-auto">
       <h2 className="text-2xl font-bold mb-4 text-center">Subscribe to Pro Plan</h2>
-      {!stripeLoaded && (
+      {/* {!stripeLoaded && (
         <div className="text-yellow-600 mb-4">
           Stripe is loading. If this message persists, please check your internet connection and disable any ad blockers.
         </div>
-      )}
+      )} */}
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="border border-gray-300 rounded-md p-3">
           <CardElement options={{ style: { base: { fontSize: '16px' } } }} />

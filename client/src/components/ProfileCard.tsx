@@ -8,6 +8,7 @@ const ProfileCard = () => {
   const user = useUser();
   const subscriptionLevel = useRecoilValue(userSubscriptionLevel);
   const joinedDate = useRecoilValue(formattedUserCreatedAt);
+  
   return (
     <section className="w-[400px] mx-auto flex gap-6 rounded-[10px] items-center justify-center">
       <div className="w-[120px] h-[120px] rounded-[100px]">

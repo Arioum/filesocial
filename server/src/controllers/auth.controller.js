@@ -84,9 +84,11 @@ const userRegister = async (req, res) => {
     const shareLimits = subscription.features;
     const token = jwt.sign({ userId: _id, email }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
-    return res
-      .status(201)
-      .json({ token, user: { userId: _id, userName, email, subscriptionLevel, shareLimits, createdAt: newUser.createdAt }, message: 'User created successfully' });
+    return res.status(201).json({
+      token,
+      user: { userId: _id, userName, email, subscriptionLevel, shareLimits, createdAt: newUser.createdAt },
+      message: 'User created successfully',
+    });
   } catch (error) {
     console.error('Registration error:', error);
     res.status(500).json({ message: 'Server error', error: error.message, stack: error.stack });
@@ -117,8 +119,9 @@ const getUserStats = async (req, res) => {
   const { userId } = req.user;
   try {
     const stats = await Stats.findOne({ userId });
+
     if (!stats) {
-      return null;
+      return res.status(200).json({ userStats: null, message: 'No Stats Found' });
     }
     const userStats = {
       totalFilesShared: stats.totalFilesShared,
